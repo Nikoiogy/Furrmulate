@@ -91,4 +91,4 @@ class NPC:
     def __str__(self):
         return f"NPC Name: {self.name} the {self.stats['class'].capitalize()}, Stats: {self.stats}"
 
-# print(NPC(1, 5, True))
+print(NPC(25, 5, True))
