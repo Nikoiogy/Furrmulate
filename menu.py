@@ -54,6 +54,7 @@ def settings():
     print("\n0) Back")
     option = input(color_text("Select an option ", "yellow") + alert + "# ")
     if option == "0":
+        alert = ""
         main_menu()
     elif option == "1":
         alert = color_text("\nNot yet available! ", "red")
