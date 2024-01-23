@@ -27,7 +27,7 @@ def main_menu():
         if next_action == "exit":
             main_menu()
         elif next_action == "start":
-            start() # ADD FUNCTIONALITY
+            # start() # ADD FUNCTIONALITY
     elif option == "2":
         alert = color_text("\nNot yet available! ", "red")
         main_menu()

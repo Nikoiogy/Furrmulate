@@ -245,21 +245,21 @@ def character_creation():
         else:
             alert = color_text("\nInvalid input. Please try again. ", "red")
 
-class Player:
+# class Player:
 
-    def __init__(self):
-        self.name = name
-        self.class_name = player_class
-        self.attributes = attributes
-        self.attribute_points = attribute_points
-        self.level = 1
-        self.experience = 0
-        self.petos = 0 # Currency
-        self.inventory = []
-        self.quests = []
-        self.location = "home"
+#     def __init__(self):
+#         self.name = name
+#         self.class_name = player_class
+#         self.attributes = attributes
+#         self.attribute_points = attribute_points
+#         self.level = 1
+#         self.experience = 0
+#         self.petos = 0 # Currency
+#         self.inventory = []
+#         self.quests = []
+#         self.location = "home"
 
-        # self.health = 
-        # self.mana = 
-        # self.stamina = 
+#         # self.health = 
+#         # self.mana = 
+#         # self.stamina = 
     
