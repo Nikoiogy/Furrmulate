@@ -5,8 +5,6 @@ import sys
 import json
 import re
 
-from main import clear, color_text
-
 # Define Variables
 alert = ""
 color_mode = True
