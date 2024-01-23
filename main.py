@@ -6,9 +6,13 @@ import json
 import re
 
 # Define Variables
-info = ""
+alert = ""
 color_mode = True
 text_speed = "Normal"
+
+# Character Creation Variables
+player_name = ""
+player_class = ""
 attribute_points = 18
 attributes = {
     "Strength": 0,
@@ -20,38 +24,61 @@ attributes = {
     "Luck": 0
 }
 
-
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
+def color_text(text, color_name):
+    global color_mode
+    if color_mode:
+        colors = {
+            "black": "\033[30m",
+            "red": "\033[31m",
+            "green": "\033[32m",
+            "yellow": "\033[33m",
+            "blue": "\033[34m",
+            "magenta": "\033[35m",
+            "cyan": "\033[36m",
+            "white": "\033[37m"
+        }
+        reset_color = "\033[0m"
+        if color_name in colors:
+            return f"{colors[color_name]}{text}{reset_color}"
+        else:
+            return text
+    else:
+        return text
+
+
 def main_menu():
-    global info
+    global alert
     clear()
     print("Welcome to the Text RPG!")
     print("1) Start")
     print("2) Load")
     print("3) Settings")
     print("4) Exit")
-    option = input(info + "# ")
+    option = input(color_text(alert, "yellow") + "# ")
     if option == "1":
-        info = ""
+        alert = ""
         character_creation()
     elif option == "2":
-        info = "Not yet available! "
+        alert = color_text("\nNot yet available! ", "red")
         main_menu()
     elif option == "3":
         settings()
     elif option == "4":
         sys.exit()
     else:
-        info = "Invalid input. Please try again. "
+        alert = color_text("\nInvalid input. Please try again. ", "red")
         main_menu()
 
+
 def settings():
-    global info
+    global alert
     global color_mode
-    
-    info = ""
+
+    alert = ""
     clear()
     print("Settings\n")
     print("In-Game Settings")
@@ -61,31 +88,29 @@ def settings():
     print("3) Color Mode: " + ("On" if color_mode else "Off"))
     print("4) Text Speed: " + text_speed)
     print("\n5) Back")
-    option = input(info + "# ")
+    option = input(color_text(alert, "yellow") + "# ")
     if option == "1":
-        info = "Not yet available! "
+        alert = color_text("\nNot yet available! ", "red")
         settings()
     elif option == "2":
-        info = "Not yet available! "
+        alert = color_text("\nNot yet available! ", "red")
         settings()
     elif option == "3":
         color_mode = not color_mode
         settings()
     elif option == "4":
-        info = "Not yet available! "
+        alert = color_text("\nNot yet available! ", "red")
         settings()
     elif option == "5":
         main_menu()
     else:
-        info = "Invalid input. Please try again. "
+        alert = color_text("\nInvalid input. Please try again. ", "red")
         settings()
 
-# Character Creation Functions    
+# Character Creation Functions
 
-def point_distribution():
-    global info
-    global attributes
-    global attribute_points
+def point_distribution(attributes, attribute_points):
+    global alert
 
     def print_attribute_description(attribute_name):
         descriptions = {
@@ -97,45 +122,57 @@ def point_distribution():
             "Charisma": "Affects your character's ability to persuade others.",
             "Luck": "Affects your character's chance of getting a critical hit."
         }
-        print("\n"+descriptions[attribute_name])
+        print("\n" + descriptions[attribute_name])
 
-    while attribute_points > 0:
+    temp_attributes = attributes.copy()
+    temp_attribute_points = attribute_points
+
+    while True:
         clear()
         print("Point Distribution\n")
-        print("You have", attribute_points, "points remaining.")
-        print("1) Strength:", attributes["Strength"])
-        print("2) Intelligence:", attributes["Intelligence"])
-        print("3) Willpower:", attributes["Willpower"])
-        print("4) Agility:", attributes["Agility"])
-        print("5) Endurance:", attributes["Endurance"])
-        print("6) Charisma:", attributes["Charisma"])
-        print("7) Luck:", attributes["Luck"])
+        print("You have", temp_attribute_points, "points remaining.")
+        print("1) Strength:", temp_attributes["Strength"])
+        print("2) Intelligence:", temp_attributes["Intelligence"])
+        print("3) Willpower:", temp_attributes["Willpower"])
+        print("4) Agility:", temp_attributes["Agility"])
+        print("5) Endurance:", temp_attributes["Endurance"])
+        print("6) Charisma:", temp_attributes["Charisma"])
+        print("7) Luck:", temp_attributes["Luck"])
         print("\n0) Done")
+        print("9) Cancel")
 
-        option = input(f"\033[33m{info}\033[0m# ")
+        option = input(color_text("Choose an attribute to change or an option ", "yellow") + alert + "# ")
 
         if option == "0":
+            alert = ""
+            attributes = temp_attributes
+            attribute_points = temp_attribute_points
             break
+        elif option == "9":
+            alert = ""
+            return attributes, attribute_points
         elif option in ["1", "2", "3", "4", "5", "6", "7"]:
-            attribute_name = list(attributes.keys())[int(option) - 1]
+            attribute_name = list(temp_attributes.keys())[int(option) - 1]
             try:
+                alert = ""
                 print_attribute_description(attribute_name)
-                value = int(input("Enter the new value for " + attribute_name + "\n# "))
-                if value < 0 or value > attribute_points:
-                    info = "Invalid input. Please enter a valid number between 0 and " + str(attribute_points) + ". "
+                value = int(input(color_text("Enter the new value for " + attribute_name + " ", "yellow") + alert + "# "))
+                if value < 0 or value > temp_attribute_points + temp_attributes[attribute_name]:
+                    alert = color_text("\nInvalid input. Please enter a valid number between 0 and " + str(
+                        temp_attribute_points + temp_attributes[attribute_name]) + ". ", "red")
                 else:
-                    attribute_points += attributes[attribute_name] - value
-                    attributes[attribute_name] = value
-                    info = ""
+                    temp_attribute_points += temp_attributes[attribute_name] - value
+                    temp_attributes[attribute_name] = value
+                    alert = ""
             except ValueError:
-                info = "Invalid input. Please enter a valid number. "
+                alert = color_text("\nInvalid input. Please enter a valid number. ", "red")
         else:
-            info = "Invalid input. Please try again. "
+            alert = color_text("\nInvalid input. Please try again. ", "red")
 
-    return attributes
+    return attributes, attribute_points
 
-def character_creation():
-    global info
+def choose_class():
+    global alert
 
     def print_class_description(class_name):
         descriptions = {
@@ -143,7 +180,43 @@ def character_creation():
             "Mage": "A master of magic who can cast powerful spells.",
             "Rogue": "A stealthy and agile character who specializes in sneak attacks."
         }
-        print("\n"+descriptions[class_name])
+        print("\n" + descriptions[class_name])
+
+    while True:
+        clear()
+        print("Character Creation\n")
+        print("1) Warrior")
+        print("2) Mage")
+        print("3) Rogue")
+        print("\n9) Cancel")
+        class_option = input(color_text("Choose a class or an option ", "yellow") + alert + "# ")
+        if class_option == "9":
+            return ""
+        elif class_option == "1":
+            player_class = "Warrior"
+        elif class_option == "2":
+            player_class = "Mage"
+        elif class_option == "3":
+            player_class = "Rogue"
+        else:
+            alert = color_text("\nInvalid input. Please try again. ", "red")
+            continue
+        print_class_description(player_class)
+        class_confirmation = input("Choose this class? \n0) Yes \n9) No \n# ")
+        if class_confirmation == "0":
+            return player_class
+        elif class_confirmation == "9":
+            continue
+        else:
+            alert = color_text("\nInvalid input. Please try again. ", "red")
+            continue
+
+def character_creation():
+    global alert
+    global player_name
+    global player_class
+    global attributes
+    global attribute_points
 
     clear()
 
@@ -156,52 +229,65 @@ def character_creation():
         print("3) Point Distribution")
         print("\n0) Done")
 
-        option = input(f"\033[33m{info}\033[0m# ")
+        option = input(color_text(alert, "yellow") + "# ")
 
         if option == "0":
-            break
-        elif option == "1":
-            info = ""
-
-            clear()
-            print("Character Creation\n")
-            print("Please enter your character's name:")
-            name = input(f"\033[33m{info}\033[0m# ")
-
-            # Check if name is empty or doesn't have at least 3 letters
-            if not re.match(r"^[a-zA-Z'.]{3,}$", name):
-                info = "Invalid input. Please enter a valid name. Name must have at least 3 letters and can include letters, apostrophes, and periods. "
+            if player_name == "":
+                alert = color_text("\nPlease choose a name. ", "red")
                 continue
-            
-            info = ""
+            elif player_class == "":
+                alert = color_text("\nPlease choose a class. ", "red")
+                continue
+            elif attribute_points > 0:
+                alert = color_text("\nPlease distribute all attribute points. ", "red")
+                continue
+            else:
+
+                character = {
+                    "name": player_name,
+                    "class": player_class,
+                    "attributes": attributes
+                }
+
+                # Create the chars directory if it doesn't exist
+                if not os.path.exists("chars"):
+                    os.makedirs("chars")
+
+                # Save the character as a JSON file
+                file_path = f"chars/{player_name}-starter.json"
+                with open(file_path, "w") as file:
+                    json.dump(character, file)
+
+        elif option == "1":
+            alert = ""
+
+            while True:
+                clear()
+                print("Character Creation\n")
+                name = input(color_text("Enter your character's name ", "yellow") + alert + "\n# ")
+
+                # Check if name is empty or doesn't have at least 3 letters
+                if not re.match(r"^[a-zA-Z'.\s]{3,}$", name.strip()) or name.startswith(" ") or name.endswith(" ") or name.startswith("'") or name.endswith("'") or name.startswith(".") or name.endswith("."):
+                    alert = color_text(
+                        "\nInvalid input. Please enter a valid name. Name must have at least 3 letters and can include letters, apostrophes, periods, and spaces. Name cannot begin or end with a space. ",
+                        "red")
+                    continue
+                else:
+                    player_name = name
+                    break
+
+            alert = ""
 
         elif option == "2":
-            info = ""
+            alert = ""
+            player_class = choose_class()
 
-            clear()
-            print("Character Creation\n")
-            print("Please choose your character's class:")
-            print("1) Warrior")
-            print("2) Mage")
-            print("3) Rogue")
-            class_option = input(f"\033[33m{info}\033[0m# ")
-            if class_option == "1":
-                character_class = "Warrior"
-            elif class_option == "2":
-                character_class = "Mage"
-            elif class_option == "3":
-                character_class = "Rogue"
-            else:
-                info = "Invalid input. Please try again. "
-                continue
-            print_class_description(character_class)
-            class_confirmation = input("Choose this class? \n1) Yes \n2) No \n# ")
-            if class_confirmation == "2":
-                continue
         elif option == "3":
-            info = ""
-            attributes = point_distribution()
+            alert = ""
+            attributes, attribute_points = point_distribution(attributes, attribute_points)
+            
         else:
-            info = "Invalid input. Please try again. "
+            alert = color_text("\nInvalid input. Please try again. ", "red")
+
 
 main_menu()
