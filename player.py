@@ -195,7 +195,7 @@ def character_creation():
                             alert = color_text("\nInvalid input. Please try again. ", "red")
                             continue
                     else:
-                        file_path = f"chars/{character_class}-starter.json"
+                        file_path = f"chars/{character_class}.json"
                         with open(file_path, "w") as file:
                             json.dump(character, file)
 
