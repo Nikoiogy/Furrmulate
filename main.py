@@ -32,14 +32,14 @@ def color_text(text, color_name):
     global color_mode
     if color_mode:
         colors = {
-            "black": "\033[30m",
-            "red": "\033[31m",
-            "green": "\033[32m",
+            "black": "\033[38;2;173;216;230m",
+            "red": "\033[38;2;255;81;81m",
+            "green": "\033[38;2;152;251;152m",
             "yellow": "\033[33m",
-            "blue": "\033[34m",
-            "magenta": "\033[35m",
-            "cyan": "\033[36m",
-            "white": "\033[37m"
+            "blue": "\033[38;2;135;206;250m",
+            "magenta": "\033[38;2;221;160;221m",
+            "cyan": "\033[38;2;0;255;255m",
+            "white": "\033[38;2;245;245;245m"
         }
         reset_color = "\033[0m"
         if color_name in colors:
@@ -49,26 +49,28 @@ def color_text(text, color_name):
     else:
         return text
 
+# Main Menu Functions
 
 def main_menu():
     global alert
     clear()
-    print("Welcome to the Text RPG!")
+    print("Welcome to the Text RPG!\n")
     print("1) Start")
     print("2) Load")
     print("3) Settings")
-    print("4) Exit")
-    option = input(color_text(alert, "yellow") + "# ")
-    if option == "1":
+    print("\n0) Exit")
+    option = input(color_text("Select an option ", "yellow") + alert + "# ")
+    if option == "0":
+        sys.exit()
+    elif option == "1":
         alert = ""
         character_creation()
     elif option == "2":
         alert = color_text("\nNot yet available! ", "red")
         main_menu()
     elif option == "3":
+        alert = ""
         settings()
-    elif option == "4":
-        sys.exit()
     else:
         alert = color_text("\nInvalid input. Please try again. ", "red")
         main_menu()
@@ -78,18 +80,19 @@ def settings():
     global alert
     global color_mode
 
-    alert = ""
     clear()
     print("Settings\n")
     print("In-Game Settings")
     print("1) Change Name")
     print("2) Change Difficulty")
     print("\nAccessability Settings")
-    print("3) Color Mode: " + ("On" if color_mode else "Off"))
+    print("3) Color Mode: " + (color_text("On", "green") if color_mode else "Off"))
     print("4) Text Speed: " + text_speed)
-    print("\n5) Back")
-    option = input(color_text(alert, "yellow") + "# ")
-    if option == "1":
+    print("\n0) Back")
+    option = input(color_text("Select an option ", "yellow") + alert + "# ")
+    if option == "0":
+        main_menu()
+    elif option == "1":
         alert = color_text("\nNot yet available! ", "red")
         settings()
     elif option == "2":
@@ -97,12 +100,11 @@ def settings():
         settings()
     elif option == "3":
         color_mode = not color_mode
+        alert = ""
         settings()
     elif option == "4":
         alert = color_text("\nNot yet available! ", "red")
         settings()
-    elif option == "5":
-        main_menu()
     else:
         alert = color_text("\nInvalid input. Please try again. ", "red")
         settings()
@@ -229,7 +231,7 @@ def character_creation():
         print("3) Point Distribution")
         print("\n0) Done")
 
-        option = input(color_text(alert, "yellow") + "# ")
+        option = input(color_text("Select an option ", "yellow") + alert + "# ")
 
         if option == "0":
             if player_name == "":
@@ -253,10 +255,23 @@ def character_creation():
                 if not os.path.exists("chars"):
                     os.makedirs("chars")
 
-                # Save the character as a JSON file
-                file_path = f"chars/{player_name}-starter.json"
-                with open(file_path, "w") as file:
-                    json.dump(character, file)
+                if os.path.exists(f"chars/{player_name}-starter.json"):
+                    option = input(color_text("\nA character with this name already exists. Do you want to overwrite it? ", "red") + alert + "\n0) Yes\n9) No\n# ")
+                    if option == "0":
+                        file_path = f"chars/{player_name}-starter.json"
+                        with open(file_path, "w") as file:
+                            json.dump(character, file)
+                        break
+                    elif option == "9":
+                        alert = ""
+                        continue
+                    else:
+                        alert = color_text("\nInvalid input. Please try again. ", "red")
+                        continue
+                else:
+                    file_path = f"chars/{player_name}-starter.json"
+                    with open(file_path, "w") as file:
+                        json.dump(character, file)
 
         elif option == "1":
             alert = ""
