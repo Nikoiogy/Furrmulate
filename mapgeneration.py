@@ -157,7 +157,7 @@ def print_dungeon(dungeon):
     for row in dungeon:
         for cell in row:
             if isinstance(cell, Dirt_Floor):
-                print(color_text("D", "brown"), end=" ")
+                print(color_text("D","brown"), end=" ")
             elif isinstance(cell, Wood_Wall):
                 print("W", end=" ")
             else:
