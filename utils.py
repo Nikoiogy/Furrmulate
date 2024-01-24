@@ -14,7 +14,8 @@ def color_text(text, color_name):
             "blue": "\033[38;2;135;206;250m",
             "magenta": "\033[38;2;221;160;221m",
             "cyan": "\033[38;2;0;255;255m",
-            "white": "\033[38;2;245;245;245m"
+            "white": "\033[38;2;245;245;245m",
+            "brown": "\033[38;2;139;69;19m"
         }
         reset_color = "\033[0m"
         if color_name in colors:
