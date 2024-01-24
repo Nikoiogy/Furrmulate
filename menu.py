@@ -1,9 +1,3 @@
-# Text RPG
-
-import os
-import json
-import re
-
 from utils import Utils, alert
 utils = Utils()
 

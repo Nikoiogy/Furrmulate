@@ -24,8 +24,6 @@ class Player:
         self.petos = 0 # Currency
         self.inventory = []
         self.quests = []
-        self.location = "home"
-
 
     def character_creation(self):
         global alert
@@ -212,7 +210,7 @@ class Player:
                     print("Character Creation\n")
                     name = input(utils.color_text("Enter your character's name ", "yellow") + alert + "\n# ")
 
-                    # Check if name is empty or doesn't have at least 3 letters
+                    # Check if name is empty, is more than three characters, and doesn't start or end with a space, apostrophe, and/or period
                     if not re.match(r"^[a-zA-Z'.\s]{3,}$", name.strip()) or name.startswith(" ") or name.endswith(" ") or name.startswith("'") or name.endswith("'") or name.startswith(".") or name.endswith("."):
                         alert = utils.color_text(
                             "\nInvalid input. Please enter a valid name. Name must have at least 3 letters and can include letters, apostrophes, periods, and spaces. Name cannot begin or end with a space. ",
