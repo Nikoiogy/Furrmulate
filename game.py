@@ -3,14 +3,14 @@ from collections import deque
 from player import Player
 from menu import Menu
 from mapgeneration import generate_dungeon
-from utils import Utils, GameState
+from utils import GameState
 from uihandler import UIHandler
 
-utils = Utils()
-
 class Game:
-    def __init__(self):
-        self.player = Player()
+    def __init__(self, utils):
+        self.utils = utils
+        self.player = Player(self.utils)
+        self.menu = Menu(self.utils)
         self.game_state = GameState.MAIN_MENU
         self.history = deque(maxlen=5)
         self.command_handlers = {
@@ -25,8 +25,7 @@ class Game:
         while True:
             print(self.game_state.value)
             if self.game_state == GameState.MAIN_MENU:
-                menu = Menu()
-                self.game_state = GameState(menu.main_menu())
+                self.game_state = GameState(self.menu.main_menu())
 
             elif self.game_state == GameState.NEW:
                 self.game_state = GameState(self.player.character_creation())
@@ -43,17 +42,17 @@ class Game:
                 sys.exit()
 
             else:
-                self.game_state = GameState(menu.main_menu())
+                self.game_state = GameState(self.menu.main_menu())
 
     def game_loop(self, dungeon):
-        Utils.clear()
+        self.utils.clear()
         alert = ""
         output = ""
 
         ui = UIHandler()  # Initialize the UIHandler outside the game loop
 
         while self.game_state == GameState.PLAYING:
-            Utils.clear()
+            self.utils.clear()
 
             ui.update_history(self.history)
             ui.update_output(output)

@@ -1,8 +1,5 @@
 import curses
 
-from utils import Utils
-utils = Utils()
-
 class UIHandler:
     def __init__(self):
         self.stdscr = curses.initscr()

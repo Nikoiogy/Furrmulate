@@ -1,21 +1,20 @@
-from utils import Utils, GameState
+from utils import GameState
 from player import Player
 
-utils = Utils()
-
 class Menu:
-    def __init__(self):
+    def __init__(self, utils):
+        self.utils = utils
         self.alert = ""
 
     def main_menu(self):
         while True:
-            Utils.clear()
+            self.utils.clear()
             print("Welcome to the Text RPG!\n")
             print("1) New Character")
             print("2) Load Character")
             print("3) Settings")
             print("\n9) Exit")
-            option = input(utils.color_text("Select an option ", "yellow") + self.alert + "# ")
+            option = input(self.utils.color_text("Select an option ", "yellow") + self.alert + "# ")
             if option == "9":
                 return GameState.EXIT
                 
@@ -32,31 +31,31 @@ class Menu:
                 self.settings()
 
             else:
-                self.alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+                self.alert = self.utils.color_text("\nInvalid input. Please try again. ", "red")
 
     def settings(self):
         while True:
-            Utils.clear()
+            self.utils.clear()
             print("Settings\n")
             print("In-Game Settings")
             print("1) Change Name")
             print("2) Change Difficulty")
             print("\nAccessibility Settings")
-            print("3) Color Mode: " + (utils.color_text("On", "green") if utils.color_mode else "Off"))
-            print("4) Text Speed: " + utils.text_speed)
+            print("3) Color Mode: " + (self.utils.color_text("On", "green") if self.utils.color_mode else "Off"))
+            print("4) Text Speed: " + self.utils.text_speed)
             print("\n9) Back")
-            option = input(utils.color_text("Select an option ", "yellow") + self.alert + "# ")
+            option = input(self.utils.color_text("Select an option ", "yellow") + self.alert + "# ")
             if option == "9":
                 self.alert = ""
                 return GameState.MAIN_MENU
             elif option == "1":
-                self.alert = utils.color_text("\nNot yet available! ", "red")
+                self.alert = self.utils.color_text("\nNot yet available! ", "red")
             elif option == "2":
-                self.alert = utils.color_text("\nNot yet available! ", "red")
+                self.alert = self.utils.color_text("\nNot yet available! ", "red")
             elif option == "3":
-                utils.color_mode = not utils.color_mode
+                self.utils.color_mode = not self.utils.color_mode
                 self.alert = ""
             elif option == "4":
-                self.alert = utils.color_text("\nNot yet available! ", "red")
+                self.alert = self.utils.color_text("\nNot yet available! ", "red")
             else:
-                self.alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+                self.alert = self.utils.color_text("\nInvalid input. Please try again. ", "red")

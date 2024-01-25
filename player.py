@@ -1,12 +1,11 @@
 import os
 import json
 import re
-
-from utils import Utils, GameState
-utils = Utils()
+from utils import GameState
 
 class Player:
-    def __init__(self):
+    def __init__(self, utils):
+        self.utils = utils
         self.name = ""
         self.class_name = ""
         self.attributes = {
@@ -30,7 +29,7 @@ class Player:
 
     def character_creation(self):
         alert = ""
-        Utils.clear()
+        self.utils.clear()
 
         def point_distribution():
             nonlocal alert
@@ -51,7 +50,7 @@ class Player:
             temp_attribute_points = self.attribute_points
 
             while True:
-                Utils.clear()
+                self.utils.clear()
                 print("Point Distribution\n")
                 print("You have", temp_attribute_points, "points remaining.")
                 print("1) Strength:", temp_attributes["Strength"])
@@ -64,7 +63,7 @@ class Player:
                 print("\n0) Done")
                 print("9) Cancel")
 
-                option = input(utils.color_text("Choose an attribute to change or an option ", "yellow") + alert + "# ")
+                option = input(self.utils.color_text("Choose an attribute to change or an option ", "yellow") + alert + "# ")
 
                 if option == "0":
                     alert = ""
@@ -79,18 +78,18 @@ class Player:
                     try:
                         alert = ""
                         print_attribute_description(attribute_name)
-                        value = int(input(utils.color_text("Enter the new value for " + attribute_name + " ", "yellow") + alert + "# "))
+                        value = int(input(self.utils.color_text("Enter the new value for " + attribute_name + " ", "yellow") + alert + "# "))
                         if value < 0 or value > temp_attribute_points + temp_attributes[attribute_name]:
-                            alert = utils.color_text("\nInvalid input. Please enter a valid number between 0 and " + str(
+                            alert = self.utils.color_text("\nInvalid input. Please enter a valid number between 0 and " + str(
                                 temp_attribute_points + temp_attributes[attribute_name]) + ". ", "red")
                         else:
                             temp_attribute_points += temp_attributes[attribute_name] - value
                             temp_attributes[attribute_name] = value
                             alert = ""
                     except ValueError:
-                        alert = utils.color_text("\nInvalid input. Please enter a valid number. ", "red")
+                        alert = self.utils.color_text("\nInvalid input. Please enter a valid number. ", "red")
                 else:
-                    alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+                    alert = self.utils.color_text("\nInvalid input. Please try again. ", "red")
 
         def choose_class():
             nonlocal alert
@@ -104,13 +103,13 @@ class Player:
                 print("\n" + descriptions[class_name])
 
             while True:
-                Utils.clear()
+                self.utils.clear()
                 print("Character Creation\n")
                 print("1) Warrior")
                 print("2) Mage")
                 print("3) Rogue")
                 print("\n9) Cancel")
-                class_option = input(utils.color_text("Choose a class or an option ", "yellow") + alert + "# ")
+                class_option = input(self.utils.color_text("Choose a class or an option ", "yellow") + alert + "# ")
                 if class_option == "9":
                     return ""
                 elif class_option == "1":
@@ -120,7 +119,7 @@ class Player:
                 elif class_option == "3":
                     self.class_name = "Rogue"
                 else:
-                    alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+                    alert = self.utils.color_text("\nInvalid input. Please try again. ", "red")
                     continue
                 print_class_description(self.class_name)
                 class_confirmation = input("Choose this class? \n0) Yes \n9) No \n# ")
@@ -129,11 +128,11 @@ class Player:
                 elif class_confirmation == "9":
                     continue
                 else:
-                    alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+                    alert = self.utils.color_text("\nInvalid input. Please try again. ", "red")
                     continue
 
         while True:
-            Utils.clear()
+            self.utils.clear()
             print("Character Creation\n")
 
             print("1) Choose Name")
@@ -142,17 +141,17 @@ class Player:
             print("\n0) Done")
             print("9) Cancel")
 
-            option = input(utils.color_text("Select an option ", "yellow") + alert + "# ")
+            option = input(self.utils.color_text("Select an option ", "yellow") + alert + "# ")
 
             if option == "0":
                 if self.class_name == "":
-                    alert = utils.color_text("\nPlease choose a name. ", "red")
+                    alert = self.utils.color_text("\nPlease choose a name. ", "red")
                     continue
                 elif self.class_name == "":
-                    alert = utils.color_text("\nPlease choose a class. ", "red")
+                    alert = self.utils.color_text("\nPlease choose a class. ", "red")
                     continue
                 elif self.attribute_points > 0:
-                    alert = utils.color_text("\nPlease distribute all attribute points. ", "red")
+                    alert = self.utils.color_text("\nPlease distribute all attribute points. ", "red")
                     continue
                 else:
                     character = {
@@ -162,7 +161,7 @@ class Player:
                     }
 
                     # Show summary of character
-                    Utils.clear()
+                    self.utils.clear()
                     print("Character Summary\n")
                     print("Name:", self.name)
                     print("Class:", self.class_name)
@@ -171,7 +170,7 @@ class Player:
                         print(attribute + ":", self.attributes[attribute])
                     print("\n0) Confirm")
                     print("9) Back")
-                    option = input(utils.color_text("Select an option ", "yellow") + alert + "# ")
+                    option = input(self.utils.color_text("Select an option ", "yellow") + alert + "# ")
 
                     if option == "0":
 
@@ -180,7 +179,7 @@ class Player:
                             os.makedirs("chars")
 
                         if os.path.exists(f"chars/{self.name}-starter.json"):
-                            option = input(utils.color_text("\nA character with this name already exists. Do you want to overwrite it? ", "red") + alert + "\n0) Yes\n9) No\n# ")
+                            option = input(self.utils.color_text("\nA character with this name already exists. Do you want to overwrite it? ", "red") + alert + "\n0) Yes\n9) No\n# ")
                             if option == "0":
                                 file_path = f"chars/{self.name}-starter.json"
                                 with open(file_path, "w") as file:
@@ -191,7 +190,7 @@ class Player:
                                 alert = ""
                                 continue
                             else:
-                                alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+                                alert = self.utils.color_text("\nInvalid input. Please try again. ", "red")
                                 continue
                         else:
                             file_path = f"chars/{self.name}.json"
@@ -208,13 +207,13 @@ class Player:
                 alert = ""
 
                 while True:
-                    Utils.clear()
+                    self.utils.clear()
                     print("Character Creation\n")
-                    name = input(utils.color_text("Enter your character's name ", "yellow") + alert + "\n# ")
+                    name = input(self.utils.color_text("Enter your character's name ", "yellow") + alert + "\n# ")
 
                     # Check if name is empty, is more than three characters, and doesn't start or end with a space, apostrophe, and/or period
                     if not re.match(r"^[a-zA-Z'.\s]{3,}$", name.strip()) or name.startswith(" ") or name.endswith(" ") or name.startswith("'") or name.endswith("'") or name.startswith(".") or name.endswith("."):
-                        alert = utils.color_text(
+                        alert = self.utils.color_text(
                             "\nInvalid input. Please enter a valid name. Name must have at least 3 letters and can include letters, apostrophes, periods, and spaces. Name cannot begin or end with a space. ",
                             "red")
                         continue
@@ -233,7 +232,7 @@ class Player:
                 point_distribution()
 
             elif option == "9":
-                option = input(utils.color_text("\nAre you sure you want to cancel? ", "red") + alert + "\n0) Yes\n9) No\n# ")
+                option = input(self.utils.color_text("\nAre you sure you want to cancel? ", "red") + alert + "\n0) Yes\n9) No\n# ")
                 if option == "0":
                     return GameState.MAIN_MENU ### EXIT TO MAIN MENU
 
@@ -242,7 +241,7 @@ class Player:
                     continue
 
             else:
-                alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+                alert = self.utils.color_text("\nInvalid input. Please try again. ", "red")
 
     def initialize_player(self):
         alert = ""
@@ -256,13 +255,13 @@ class Player:
         # If there are no characters, return to main menu
         if len(characters) == 0:
             print("No characters found.")
-            input(utils.color_text("\nPress enter to continue # ", "yellow"))
+            input(self.utils.color_text("\nPress enter to continue # ", "yellow"))
             return GameState.MAIN_MENU ### EXIT TO MAIN MENU
 
         while True:
             # Select character
             while True:
-                Utils.clear()
+                self.utils.clear()
                 print("Select Character\n")
 
                 for i in range(len(characters)):
@@ -270,7 +269,7 @@ class Player:
 
                 print("\n0) Back")
 
-                option = input(utils.color_text("Select a character ", "yellow") + alert + "# ")
+                option = input(self.utils.color_text("Select a character ", "yellow") + alert + "# ")
                 if option == "0":
                     return GameState.MAIN_MENU ### EXIT TO MAIN MENU
                 elif option in [str(i + 1) for i in range(len(characters))]:
@@ -282,10 +281,10 @@ class Player:
                     self.attributes = character["attributes"]
                     break
                 else:
-                    alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+                    alert = self.utils.color_text("\nInvalid input. Please try again. ", "red")
 
             while True:
-                Utils.clear()
+                self.utils.clear()
                 print("Character Summary\n")
                 print("Name:", self.name)
                 print("Class:", self.class_name)
@@ -294,7 +293,7 @@ class Player:
                     print(attribute + ":", self.attributes[attribute])
                 print("\n0) Confirm")
                 print("9) Back")
-                option = input(utils.color_text("Select an option ", "yellow") + alert + "# ")
+                option = input(self.utils.color_text("Select an option ", "yellow") + alert + "# ")
 
                 if option == "0":
                     return GameState.PLAYING ### START GAME
@@ -302,7 +301,7 @@ class Player:
                     alert = ""
                     break
                 else:
-                    alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+                    alert = self.utils.color_text("\nInvalid input. Please try again. ", "red")
                     continue
 
     # Commands
