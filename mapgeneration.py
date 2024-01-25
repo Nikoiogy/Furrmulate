@@ -151,8 +151,7 @@ def generate_dungeon(num_rooms, size):
                     nx, ny = x + dx, y + dy
                     if 0 <= nx < size and 0 <= ny < size and not isinstance(dungeon[ny][nx], Dirt_Floor):
                         dungeon[ny][nx] = Wood_Wall(nx, ny)
-                
-
+    
     return dungeon
 
 

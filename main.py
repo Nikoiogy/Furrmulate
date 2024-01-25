@@ -1,13 +1,8 @@
-import sys
+from game import Game
 
-from menu import Menu
-class Game:
+def main():
+    game = Game()
+    game.start()
 
-    def start(self):
-        menu = Menu().main_menu()
-        if menu == "start":
-            pass
-        elif menu == "exit":
-            sys.exit()
-
-Game().start()
+if __name__ == "__main__":
+    main()

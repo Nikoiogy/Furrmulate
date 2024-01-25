@@ -16,7 +16,7 @@ class Menu:
         print("3) Settings")
         print("\n0) Exit")
         option = input(utils.color_text("Select an option ", "yellow") + self.alert + "# ")
-        if option == "0":
+        if option == "9":
             return "exit"
         elif option == "1":
             self.alert = ""
@@ -27,8 +27,8 @@ class Menu:
                 return "start"
             
         elif option == "2":
-            self.alert = utils.color_text("\nNot yet available! ", "red")
-            self.main_menu()
+            self.alert = ""
+            return "load"
         elif option == "3":
             self.alert = ""
             self.settings()
@@ -45,9 +45,9 @@ class Menu:
         print("\nAccessability Settings")
         print("3) Color Mode: " + (utils.color_text("On", "green") if utils.color_mode else "Off"))
         print("4) Text Speed: " + utils.text_speed)
-        print("\n0) Back")
+        print("\n9) Back")
         option = input(utils.color_text("Select an option ", "yellow") + self.alert + "# ")
-        if option == "0":
+        if option == "9":
             self.alert = ""
             self.main_menu()
         elif option == "1":
