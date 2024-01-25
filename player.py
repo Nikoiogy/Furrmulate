@@ -303,3 +303,5 @@ class Player:
             else:
                 alert = utils.color_text("\nInvalid input. Please try again. ", "red")
                 continue
+
+    # Commands
