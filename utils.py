@@ -29,3 +29,16 @@ class Utils:
                 return text
         else:
             return text
+        
+    def print_dungeon(self, dungeon):
+        for row in dungeon:
+            for cell in row:
+                if isinstance(cell, Dirt_Floor):
+                    print(Utils.color_text("F", "brown"), end=" ")
+                elif isinstance(cell, Wood_Wall):
+                    print("W", end=" ")
+                elif isinstance(cell, Door):
+                    print(Utils.color_text("D", "green"), end=" ")
+                else:
+                    print("_", end=" ")
+            print()

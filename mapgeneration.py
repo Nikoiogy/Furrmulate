@@ -157,19 +157,3 @@ def generate_dungeon(num_rooms, size):
     spawn = (random.randint(0, size - 1), random.randint(0, size - 1))
     
     return dungeon, spawn
-
-
-# def print_dungeon(dungeon):
-#     for row in dungeon:
-#         for cell in row:
-#             if isinstance(cell, Dirt_Floor):
-#                 print(utils.color_text("F", "brown"), end=" ")
-#             elif isinstance(cell, Wood_Wall):
-#                 print("W", end=" ")
-#             elif isinstance(cell, Door):
-#                 print(utils.color_text("D", "green"), end=" ")
-#             else:
-#                 print("_", end=" ")
-#         print()
-
-# print_dungeon(generate_dungeon(10, 60))
