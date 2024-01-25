@@ -151,21 +151,25 @@ def generate_dungeon(num_rooms, size):
                     nx, ny = x + dx, y + dy
                     if 0 <= nx < size and 0 <= ny < size and not isinstance(dungeon[ny][nx], Dirt_Floor):
                         dungeon[ny][nx] = Wood_Wall(nx, ny)
+
+
+    # Pick random cell to be spawn point
+    spawn = (random.randint(0, size - 1), random.randint(0, size - 1))
     
-    return dungeon
+    return dungeon, spawn
 
 
-def print_dungeon(dungeon):
-    for row in dungeon:
-        for cell in row:
-            if isinstance(cell, Dirt_Floor):
-                print(utils.color_text("F", "brown"), end=" ")
-            elif isinstance(cell, Wood_Wall):
-                print("W", end=" ")
-            elif isinstance(cell, Door):
-                print(utils.color_text("D", "green"), end=" ")
-            else:
-                print("_", end=" ")
-        print()
+# def print_dungeon(dungeon):
+#     for row in dungeon:
+#         for cell in row:
+#             if isinstance(cell, Dirt_Floor):
+#                 print(utils.color_text("F", "brown"), end=" ")
+#             elif isinstance(cell, Wood_Wall):
+#                 print("W", end=" ")
+#             elif isinstance(cell, Door):
+#                 print(utils.color_text("D", "green"), end=" ")
+#             else:
+#                 print("_", end=" ")
+#         print()
 
-print_dungeon(generate_dungeon(10, 60))
+# print_dungeon(generate_dungeon(10, 60))

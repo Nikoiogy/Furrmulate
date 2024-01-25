@@ -2,7 +2,7 @@ import os
 import json
 import re
 
-from utils import Utils, alert
+from utils import Utils
 utils = Utils()
 
 class Player:
@@ -25,13 +25,15 @@ class Player:
         self.inventory = []
         self.quests = []
 
-    def character_creation(self):
-        global alert
+        self.x = 0
+        self.y = 0
 
+    def character_creation(self):
+        alert = ""
         Utils.clear()
 
         def point_distribution():
-            global alert
+            nonlocal alert
 
             def print_attribute_description(attribute_name):
                 descriptions = {
@@ -91,7 +93,7 @@ class Player:
                     alert = utils.color_text("\nInvalid input. Please try again. ", "red")
 
         def choose_class():
-            global alert
+            nonlocal alert
 
             def print_class_description(class_name):
                 descriptions = {
@@ -177,13 +179,13 @@ class Player:
                         if not os.path.exists("chars"):
                             os.makedirs("chars")
 
-                        if os.path.exists(f"chars/{self.class_name}-starter.json"):
+                        if os.path.exists(f"chars/{self.name}-starter.json"):
                             option = input(utils.color_text("\nA character with this name already exists. Do you want to overwrite it? ", "red") + alert + "\n0) Yes\n9) No\n# ")
                             if option == "0":
-                                file_path = f"chars/{self.class_name}-starter.json"
+                                file_path = f"chars/{self.name}-starter.json"
                                 with open(file_path, "w") as file:
                                     json.dump(character, file)
-                                return "start"
+                                return "playing" ### START GAME
 
                             elif option == "9":
                                 alert = ""
@@ -192,11 +194,11 @@ class Player:
                                 alert = utils.color_text("\nInvalid input. Please try again. ", "red")
                                 continue
                         else:
-                            file_path = f"chars/{self.class_name}.json"
+                            file_path = f"chars/{self.name}.json"
                             with open(file_path, "w") as file:
                                 json.dump(character, file)
 
-                            return "start"
+                            return "playing" ### START GAME
 
                     elif option == "9":
                         alert = ""
@@ -233,7 +235,7 @@ class Player:
             elif option == "9":
                 option = input(utils.color_text("\nAre you sure you want to cancel? ", "red") + alert + "\n0) Yes\n9) No\n# ")
                 if option == "0":
-                    return "exit"
+                    return "main_menu" ### EXIT TO MAIN MENU
 
                 elif option == "9":
                     alert = ""
@@ -243,12 +245,9 @@ class Player:
                 alert = utils.color_text("\nInvalid input. Please try again. ", "red")
 
     def initialize_player(self):
-        global alert
+        alert = ""
 
-        Utils.clear()
-        print("Choose a character\n")
-
-        # List all characters
+        # Get list of characters
         characters = []
         for file in os.listdir("chars"):
             if file.endswith(".json"):
@@ -257,20 +256,22 @@ class Player:
         # If there are no characters, return to main menu
         if len(characters) == 0:
             print("No characters found.")
-            input("\nPress enter to continue...")
-            return
-
-        # Print characters
-        for i in range(len(characters)):
-            print(str(i + 1) + ") " + characters[i])
-
-        print("\n9) Back")
+            input(utils.color_text("\nPress enter to continue # ", "yellow"))
+            return "main_menu" ### EXIT TO MAIN MENU
 
         # Select character
         while True:
+            Utils.clear()
+            print("Select Character\n")
+
+            for i in range(len(characters)):
+                print(str(i + 1) + ") " + characters[i])
+
+            print("\n0) Back")
+
             option = input(utils.color_text("Select a character ", "yellow") + alert + "# ")
-            if option == "9":
-                return
+            if option == "0":
+                return "main_menu" ### EXIT TO MAIN MENU
             elif option in [str(i + 1) for i in range(len(characters))]:
                 file_path = f"chars/{characters[int(option) - 1]}.json"
                 with open(file_path, "r") as file:
@@ -282,23 +283,23 @@ class Player:
             else:
                 alert = utils.color_text("\nInvalid input. Please try again. ", "red")
 
-        # Show character summary
-        Utils.clear()
-        print("Character Summary\n")
-        print("Name:", self.name)
-        print("Class:", self.class_name)
-        print("\nAttributes:")
-        for attribute in self.attributes:
-            print(attribute + ":", self.attributes[attribute])
-        print("\n0) Confirm")
-        print("9) Back")
-        option = input(utils.color_text("Select an option ", "yellow") + alert + "# ")
+        while True:
+            Utils.clear()
+            print("Character Summary\n")
+            print("Name:", self.name)
+            print("Class:", self.class_name)
+            print("\nAttributes:")
+            for attribute in self.attributes:
+                print(attribute + ":", self.attributes[attribute])
+            print("\n0) Confirm")
+            print("9) Back")
+            option = input(utils.color_text("Select an option ", "yellow") + alert + "# ")
 
-        if option == "0":
-            return "start"
-        elif option == "9":
-            alert = ""
-            self.initialize_player()
-        else:
-            alert = utils.color_text("\nInvalid input. Please try again. ", "red")
-            self.initialize_player()
+            if option == "0":
+                return "playing" ### START GAME
+            elif option == "9":
+                alert = ""
+                self.initialize_player()
+            else:
+                alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+                continue

@@ -1,7 +1,5 @@
 import os
 
-alert = ""
-
 class Utils:
     def __init__(self):
         self.color_mode = True

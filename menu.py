@@ -1,40 +1,38 @@
-from utils import Utils, alert
+from utils import Utils
 utils = Utils()
 
 from player import Player
-player = Player()
 
 class Menu:
     def __init__(self):
         self.alert = ""
 
     def main_menu(self):
-        Utils.clear()
-        print("Welcome to the Text RPG!\n")
-        print("1) Start")
-        print("2) Load")
-        print("3) Settings")
-        print("\n0) Exit")
-        option = input(utils.color_text("Select an option ", "yellow") + self.alert + "# ")
-        if option == "9":
-            return "exit"
-        elif option == "1":
-            self.alert = ""
-            next_action = player.character_creation()
-            if next_action == "exit":
-                self.main_menu()
-            elif next_action == "start":
-                return "start"
-            
-        elif option == "2":
-            self.alert = ""
-            return "load"
-        elif option == "3":
-            self.alert = ""
-            self.settings()
-        else:
-            self.alert = utils.color_text("\nInvalid input. Please try again. ", "red")
-            self.main_menu()
+        while True:  # Add this line
+                Utils.clear()
+                print("Welcome to the Text RPG!\n")
+                print("1) New Character")
+                print("2) Load Character")
+                print("3) Settings")
+                print("\n9) Exit")
+                option = input(utils.color_text("Select an option ", "yellow") + self.alert + "# ")
+                if option == "9":
+                    return "exit"
+                
+                elif option == "1":
+                    self.alert = ""
+                    return "new"
+                    
+                elif option == "2":
+                    self.alert = ""
+                    return "load"
+                
+                elif option == "3":
+                    self.alert = ""
+                    self.settings()
+
+                else:
+                    self.alert = utils.color_text("\nInvalid input. Please try again. ", "red")
 
     def settings(self):
         Utils.clear()
