@@ -3,8 +3,9 @@ from collections import deque
 from player import Player
 from menu import Menu
 from mapgeneration import generate_dungeon
-
 from utils import Utils, GameState
+from uihandler import UIHandler
+
 utils = Utils()
 
 class Game:
@@ -13,8 +14,10 @@ class Game:
         self.game_state = GameState.MAIN_MENU
         self.history = deque(maxlen=5)
         self.command_handlers = {
+            "test": self.handle_test,
             "exit": self.handle_exit,
             "save": self.handle_save,
+
             # Add more command handlers here
         }
 
@@ -47,13 +50,14 @@ class Game:
         alert = ""
         output = ""
 
+        ui = UIHandler()  # Initialize the UIHandler outside the game loop
+
         while self.game_state == GameState.PLAYING:
             Utils.clear()
 
-            print("\n # ".join(self.history))
-
-            print(output)
-            command = input(utils.color_text("Enter a command ", "yellow") + alert + "# ")
+            ui.update_history(self.history)
+            ui.update_output(output)
+            command = ui.get_command()
             self.history.append(command)
             output = ""
 
@@ -61,11 +65,21 @@ class Game:
 
             handler = self.command_handlers.get(command)
             if handler:
-                handler()
+                alert = ""
+                output = handler()
             else:
-                alert = utils.color_text("\nInvalid command! ", "red")
+                alert = "Invalid command!"
+            
+            ui.update_alert(alert)  # Update the alert message
+
+        ui.cleanup()  # Clean up the UIHandler`
+
+    def handle_test(self):
+        output = "Test command"
+        return output
 
     def handle_exit(self):
+        self.history.clear()
         self.game_state = GameState.MAIN_MENU
 
     def handle_save(self):
