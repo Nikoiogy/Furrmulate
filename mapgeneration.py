@@ -1,7 +1,8 @@
 import random
 
 # from npchandler import NPC
-from utils import color_text
+from utils import Utils
+utils = Utils()
 
 # Cell Classes
 
@@ -87,6 +88,7 @@ def generate_dungeon(num_rooms, size):
 
     rooms = []
 
+    # Create rooms
     for i in range(num_rooms):
         room_size = random.randint(5, 8)
         room_x = random.randint(1, size - room_size - 2)
@@ -127,10 +129,10 @@ def generate_dungeon(num_rooms, size):
         next_room_x, next_room_y, next_room_size = rooms[i + 1]
 
         # Calculate the start and end points of the corridor
-        start_x = room_x + room_size // 2
-        start_y = room_y + room_size // 2
-        end_x = next_room_x + next_room_size // 2
-        end_y = next_room_y + next_room_size // 2
+        start_x = random.choice([room_x, room_x + room_size - 1])
+        start_y = random.choice([room_y, room_y + room_size - 1])
+        end_x = random.choice([next_room_x, next_room_x + next_room_size - 1])
+        end_y = random.choice([next_room_y, next_room_y + next_room_size - 1])
 
         # Create the corridor
         x, y = start_x, start_y
@@ -149,6 +151,7 @@ def generate_dungeon(num_rooms, size):
                     nx, ny = x + dx, y + dy
                     if 0 <= nx < size and 0 <= ny < size and not isinstance(dungeon[ny][nx], Dirt_Floor):
                         dungeon[ny][nx] = Wood_Wall(nx, ny)
+                
 
     return dungeon
 
@@ -157,9 +160,11 @@ def print_dungeon(dungeon):
     for row in dungeon:
         for cell in row:
             if isinstance(cell, Dirt_Floor):
-                print(color_text("D","brown"), end=" ")
+                print(utils.color_text("F", "brown"), end=" ")
             elif isinstance(cell, Wood_Wall):
                 print("W", end=" ")
+            elif isinstance(cell, Door):
+                print(utils.color_text("D", "green"), end=" ")
             else:
                 print("_", end=" ")
         print()
