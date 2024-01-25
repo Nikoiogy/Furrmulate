@@ -1,5 +1,5 @@
 import os
-
+from enum import Enum
 class Utils:
     def __init__(self):
         self.color_mode = True
@@ -29,6 +29,13 @@ class Utils:
                 return text
         else:
             return text
+        
+class GameState(Enum):
+    MAIN_MENU = "main_menu"
+    NEW = "new"
+    LOAD = "load"
+    PLAYING = "playing"
+    EXIT = "exit"
         
     # def print_dungeon(self, dungeon):
     #     for row in dungeon:

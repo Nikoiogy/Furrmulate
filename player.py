@@ -2,7 +2,7 @@ import os
 import json
 import re
 
-from utils import Utils
+from utils import Utils, GameState
 utils = Utils()
 
 class Player:
@@ -185,7 +185,7 @@ class Player:
                                 file_path = f"chars/{self.name}-starter.json"
                                 with open(file_path, "w") as file:
                                     json.dump(character, file)
-                                return "playing" ### START GAME
+                                return GameState.PLAYING ### START GAME
 
                             elif option == "9":
                                 alert = ""
@@ -235,7 +235,7 @@ class Player:
             elif option == "9":
                 option = input(utils.color_text("\nAre you sure you want to cancel? ", "red") + alert + "\n0) Yes\n9) No\n# ")
                 if option == "0":
-                    return "main_menu" ### EXIT TO MAIN MENU
+                    return GameState.MAIN_MENU ### EXIT TO MAIN MENU
 
                 elif option == "9":
                     alert = ""
@@ -257,51 +257,52 @@ class Player:
         if len(characters) == 0:
             print("No characters found.")
             input(utils.color_text("\nPress enter to continue # ", "yellow"))
-            return "main_menu" ### EXIT TO MAIN MENU
-
-        # Select character
-        while True:
-            Utils.clear()
-            print("Select Character\n")
-
-            for i in range(len(characters)):
-                print(str(i + 1) + ") " + characters[i])
-
-            print("\n0) Back")
-
-            option = input(utils.color_text("Select a character ", "yellow") + alert + "# ")
-            if option == "0":
-                return "main_menu" ### EXIT TO MAIN MENU
-            elif option in [str(i + 1) for i in range(len(characters))]:
-                file_path = f"chars/{characters[int(option) - 1]}.json"
-                with open(file_path, "r") as file:
-                    character = json.load(file)
-                self.name = character["name"]
-                self.class_name = character["class"]
-                self.attributes = character["attributes"]
-                break
-            else:
-                alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+            return GameState.MAIN_MENU ### EXIT TO MAIN MENU
 
         while True:
-            Utils.clear()
-            print("Character Summary\n")
-            print("Name:", self.name)
-            print("Class:", self.class_name)
-            print("\nAttributes:")
-            for attribute in self.attributes:
-                print(attribute + ":", self.attributes[attribute])
-            print("\n0) Confirm")
-            print("9) Back")
-            option = input(utils.color_text("Select an option ", "yellow") + alert + "# ")
+            # Select character
+            while True:
+                Utils.clear()
+                print("Select Character\n")
 
-            if option == "0":
-                return "playing" ### START GAME
-            elif option == "9":
-                alert = ""
-                self.initialize_player()
-            else:
-                alert = utils.color_text("\nInvalid input. Please try again. ", "red")
-                continue
+                for i in range(len(characters)):
+                    print(str(i + 1) + ") " + characters[i])
+
+                print("\n0) Back")
+
+                option = input(utils.color_text("Select a character ", "yellow") + alert + "# ")
+                if option == "0":
+                    return GameState.MAIN_MENU ### EXIT TO MAIN MENU
+                elif option in [str(i + 1) for i in range(len(characters))]:
+                    file_path = f"chars/{characters[int(option) - 1]}.json"
+                    with open(file_path, "r") as file:
+                        character = json.load(file)
+                    self.name = character["name"]
+                    self.class_name = character["class"]
+                    self.attributes = character["attributes"]
+                    break
+                else:
+                    alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+
+            while True:
+                Utils.clear()
+                print("Character Summary\n")
+                print("Name:", self.name)
+                print("Class:", self.class_name)
+                print("\nAttributes:")
+                for attribute in self.attributes:
+                    print(attribute + ":", self.attributes[attribute])
+                print("\n0) Confirm")
+                print("9) Back")
+                option = input(utils.color_text("Select an option ", "yellow") + alert + "# ")
+
+                if option == "0":
+                    return GameState.PLAYING ### START GAME
+                elif option == "9":
+                    alert = ""
+                    break
+                else:
+                    alert = utils.color_text("\nInvalid input. Please try again. ", "red")
+                    continue
 
     # Commands
