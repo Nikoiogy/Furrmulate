@@ -12,6 +12,14 @@ class Cell:
         self.y = y
         self.visible = False
 
+class Empty(Cell):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.symbol = "░"
+        self.color = "black"
+        self.name = "Empty"
+        self.passable = False
+
 class Wood_Wall(Cell):
     def __init__(self, x, y):
         super().__init__(x, y)
@@ -84,7 +92,7 @@ class Trap(Cell):
         self.visible = False
 
 def generate_dungeon(num_rooms, size):
-    dungeon = [[Stone_Wall(x, y) for x in range(size)] for y in range(size)]
+    dungeon = [[Empty(x, y) for x in range(size)] for y in range(size)]
 
     rooms = []
 
@@ -151,9 +159,13 @@ def generate_dungeon(num_rooms, size):
                     nx, ny = x + dx, y + dy
                     if 0 <= nx < size and 0 <= ny < size and not isinstance(dungeon[ny][nx], Dirt_Floor):
                         dungeon[ny][nx] = Wood_Wall(nx, ny)
-
-
-    # Pick random cell to be spawn point
-    spawn = (random.randint(0, size - 1), random.randint(0, size - 1))
     
-    return dungeon, spawn
+    return dungeon
+
+# def print_dungeon(dungeon):
+#     for row in dungeon:
+#         for cell in row:
+#             print(utils.color_text(cell.symbol, cell.color), end=" ")
+#         print()
+
+# print_dungeon(generate_dungeon(10, 50))

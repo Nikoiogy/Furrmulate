@@ -13,10 +13,24 @@ class Game:
         self.menu = Menu(self.utils)
         self.game_state = GameState.MAIN_MENU
         self.history = deque(maxlen=25)
+        self.ui = UIHandler()
+        self.ui.cleanup()
+
+        self.dungeon = None
         self.command_handlers = {
             "test": self.handle_test,
             "exit": self.handle_exit,
             "save": self.handle_save,
+            "map": self.handle_map,
+            # "move": self.player.move,
+            # "look": self.player.look,
+            # "inventory": self.player.print_inventory,
+            # "pickup": self.player.pickup,
+            # "drop": self.player.drop,
+            # "equip": self.player.equip,
+            # "unequip": self.player.unequip,
+            # "stats": self.player.print_stats,
+            # "help": self.player.print_help,
 
             # Add more command handlers here
         }
@@ -34,9 +48,9 @@ class Game:
                 self.game_state = GameState(self.player.initialize_player())
 
             elif self.game_state == GameState.PLAYING:
-                dungeon, spawn = generate_dungeon(10, 50)
-                self.player.x, self.player.y = spawn
-                self.game_loop(dungeon)
+                dungeon = generate_dungeon(10, 50)
+                self.dungeon = dungeon
+                self.game_loop()
 
             elif self.game_state == GameState.EXIT:
                 sys.exit()
@@ -44,19 +58,17 @@ class Game:
             else:
                 self.game_state = GameState(self.menu.main_menu())
 
-    def game_loop(self, dungeon):
+    def game_loop(self):
         self.utils.clear()
         alert = ""
         output = ""
 
-        ui = UIHandler()  # Initialize the UIHandler outside the game loop
-
         while self.game_state == GameState.PLAYING:
             self.utils.clear()
 
-            ui.update_history(self.history)
-            ui.update_output(output)
-            command = ui.get_command()
+            self.ui.update_history(self.history)
+            self.ui.update_output(output)
+            command = self.ui.get_command()
             self.history.append(" # " + command)
             output = ""
 
@@ -65,13 +77,16 @@ class Game:
             handler = self.command_handlers.get(command)
             if handler:
                 alert = ""
-                output = handler()
+                try:
+                    output = handler()
+                except Exception as e:
+                    alert = f"Error: {str(e)}"
             else:
                 alert = "Invalid command!"
             
-            ui.update_alert(alert)  # Update the alert message
+            self.ui.update_alert(alert)  # Update the alert message
 
-        ui.cleanup()  # Clean up the UIHandler`
+        self.ui.cleanup()  # Clean up the UIHandler
 
     def handle_test(self):
         output = "Test command"
@@ -84,4 +99,23 @@ class Game:
     def handle_save(self):
         pass
 
-    # Add more command handler methods here
+    def handle_map(self):
+        self.ui.map_handler(self.dungeon)
+
+    def handle_move(self):
+        pass
+
+    def handle_look(self):
+        pass
+
+    def handle_inventory(self):
+        pass
+
+    def handle_pickup(self):
+        pass
+
+    def handle_drop(self):
+        pass
+
+    def handle_equip(self):
+        pass

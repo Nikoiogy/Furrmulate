@@ -49,6 +49,45 @@ class UIHandler:
         curses.noecho()  # Disable echoing of input
         self.input_win.refresh()
         return command
+
+    def map_handler(self, dungeon):
+        def get_cell_char(cell):
+            return cell.symbol + " "
+
+        self.stdscr.clear()
+        height, width = self.stdscr.getmaxyx()
+        map_height = height - 3
+        map_width = width // 2
+
+        if len(dungeon) > map_height or len(dungeon[0]) > map_width:
+            camera_x = max(0, len(dungeon[0]) - map_width)
+            camera_y = max(0, len(dungeon) - map_height)
+
+            while True:
+                key = self.stdscr.getch()
+                if key == ord('e'):  # Exit the map if 'e' is pressed
+                    return "Exited map view."
+                elif key == curses.KEY_UP and camera_y > 0:
+                    camera_y -= 1
+                elif key == curses.KEY_DOWN and camera_y < len(dungeon) - map_height:
+                    camera_y += 1
+                elif key == curses.KEY_LEFT and camera_x > 0:
+                    camera_x -= 1
+                elif key == curses.KEY_RIGHT and camera_x < len(dungeon[0]) - map_width:
+                    camera_x += 1
+
+                for y in range(map_height):
+                    for x in range(map_width):
+                        if y + camera_y < len(dungeon) and x + camera_x < len(dungeon[0]):
+                            self.stdscr.addch(y, x, get_cell_char(dungeon[y + camera_y][x + camera_x]))
+                self.stdscr.refresh()
+        else:
+            for y in range(len(dungeon)):
+                for x in range(len(dungeon[0])):
+                    self.stdscr.addch(y, x, get_cell_char(dungeon[y][x]))
+
+        self.stdscr.refresh()
+        
         
     def cleanup(self):
         curses.nocbreak()
