@@ -12,7 +12,7 @@ class Game:
         self.player = Player(self.utils)
         self.menu = Menu(self.utils)
         self.game_state = GameState.MAIN_MENU
-        self.history = deque(maxlen=5)
+        self.history = deque(maxlen=25)
         self.command_handlers = {
             "test": self.handle_test,
             "exit": self.handle_exit,
@@ -57,7 +57,7 @@ class Game:
             ui.update_history(self.history)
             ui.update_output(output)
             command = ui.get_command()
-            self.history.append(command)
+            self.history.append(" # " + command)
             output = ""
 
             command = command.lower()

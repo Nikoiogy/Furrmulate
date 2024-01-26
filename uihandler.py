@@ -8,17 +8,20 @@ class UIHandler:
         self.stdscr.keypad(True)
 
         height, width = self.stdscr.getmaxyx()
-        self.history_win = curses.newwin(height - 3, width // 2, 0, 0)
+        self.history_win = curses.newwin(height - 2, width // 2, 0, 0)
         self.output_win = curses.newwin(height - 3, width // 2, 0, width // 2)
         self.alert_win = curses.newwin(1, width, height - 2, 0)  # New alert window
         self.input_win = curses.newwin(1, width, height - 1, 0)
 
     def update_history(self, history):
         self.history_win.clear()
-        height, _ = self.history_win.getmaxyx()
+        height, width = self.history_win.getmaxyx()
         for i, command in enumerate(reversed(history)):
-            if i < height:
-                self.history_win.addstr(height - 1 - i, 0, command)
+            line_number = height - 2 - i
+            if 0 <= line_number < height:
+                if len(command) > width - 4:
+                    command = command[:width - 4] + '...'
+                self.history_win.addstr(line_number, 0, command)
         self.history_win.refresh()
 
     def update_output(self, output):
