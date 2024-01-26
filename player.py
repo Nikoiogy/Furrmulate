@@ -305,3 +305,7 @@ class Player:
                     continue
 
     # Commands
+    
+    def set_position(self, x, y):
+        self.x = x
+        self.y = y

@@ -1,8 +1,10 @@
 import sys
+import random
 from collections import deque
+from tqdm import tqdm
 from player import Player
 from menu import Menu
-from mapgeneration import generate_dungeon
+from mapgeneration import generate_world
 from utils import GameState
 from uihandler import UIHandler
 
@@ -16,7 +18,6 @@ class Game:
         self.ui = UIHandler()
         self.ui.cleanup()
 
-        self.dungeon = None
         self.command_handlers = {
             "test": self.handle_test,
             "exit": self.handle_exit,
@@ -35,6 +36,23 @@ class Game:
             # Add more command handlers here
         }
 
+    def loading_screen(self, message, input_function):
+        self.utils.clear()
+        print(message)
+        
+        # Create a progress bar
+        with tqdm(total=100) as pbar:
+            previous_progress = 0
+            result = None
+            for progress, output in input_function():
+                # Update the progress bar with the increment
+                pbar.update(progress - previous_progress)
+                previous_progress = progress
+                result = output
+
+        print("Loading complete!")
+        return result
+
     def start(self):
         while True:
             print(self.game_state.value)
@@ -48,8 +66,9 @@ class Game:
                 self.game_state = GameState(self.player.initialize_player())
 
             elif self.game_state == GameState.PLAYING:
-                dungeon = generate_dungeon(10, 50)
-                self.dungeon = dungeon
+                self.world = self.loading_screen("Generating world...", lambda: generate_world(400))
+                self.spawn = random.choice([cell for row in self.world for cell in row if cell.passable])
+                self.player.set_position(self.spawn.x, self.spawn.y)
                 self.game_loop()
 
             elif self.game_state == GameState.EXIT:
@@ -65,7 +84,7 @@ class Game:
 
         while self.game_state == GameState.PLAYING:
             self.utils.clear()
-
+            
             self.ui.update_history(self.history)
             self.ui.update_output(output)
             command = self.ui.get_command()
@@ -80,7 +99,7 @@ class Game:
                 try:
                     output = handler()
                 except Exception as e:
-                    alert = f"Error: {str(e)}"
+                    alert = f"Error: {e}"
             else:
                 alert = "Invalid command!"
             
@@ -100,7 +119,7 @@ class Game:
         pass
 
     def handle_map(self):
-        self.ui.map_handler(self.dungeon)
+        self.ui.map_handler(self.world)
 
     def handle_move(self):
         pass
