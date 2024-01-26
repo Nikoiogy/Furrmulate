@@ -1,5 +1,6 @@
 import sys
 import random
+import pickle
 from collections import deque
 from tqdm import tqdm
 from player import Player
@@ -66,7 +67,14 @@ class Game:
                 self.game_state = GameState(self.player.initialize_player())
 
             elif self.game_state == GameState.PLAYING:
-                self.world = self.loading_screen("Generating world...", lambda: generate_world(400))
+                if self.utils.debug_mode:
+                    debug_world_filepath = "data/maps/debug-world.pkl"
+
+                    with open(debug_world_filepath, "rb") as file:
+                        self.world = pickle.load(file)
+                else:
+                    self.world = self.loading_screen("Generating world...", lambda: generate_world(400))
+
                 self.spawn = random.choice([cell for row in self.world for cell in row if cell.passable])
                 self.player.set_position(self.spawn.x, self.spawn.y)
                 self.game_loop()

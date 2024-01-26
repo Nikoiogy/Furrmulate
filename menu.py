@@ -37,12 +37,14 @@ class Menu:
         while True:
             self.utils.clear()
             print("Settings\n")
-            print("In-Game Settings")
+            print("Game Settings")
             print("1) Change Name")
             print("2) Change Difficulty")
             print("\nAccessibility Settings")
             print("3) Color Mode: " + (self.utils.color_text("On", "green") if self.utils.color_mode else "Off"))
             print("4) Text Speed: " + self.utils.text_speed)
+            print("\Development Settings")
+            print("5) Debug Mode: " + (self.utils.color_text("On", "green") if self.utils.debug_mode else "Off"))
             print("\n9) Back")
             option = input(self.utils.color_text("Select an option ", "yellow") + self.alert + "# ")
             if option == "9":
@@ -57,5 +59,8 @@ class Menu:
                 self.alert = ""
             elif option == "4":
                 self.alert = self.utils.color_text("\nNot yet available! ", "red")
+            elif option == "5":
+                self.utils.debug_mode = not self.utils.debug_mode
+                self.alert = ""
             else:
                 self.alert = self.utils.color_text("\nInvalid input. Please try again. ", "red")

@@ -4,6 +4,7 @@ class Utils:
     def __init__(self):
         self.color_mode = True
         self.text_speed = "Fast"
+        self.debug_mode = True
 
     @staticmethod
     def clear():

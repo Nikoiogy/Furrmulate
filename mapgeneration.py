@@ -1,4 +1,6 @@
 import random
+import pickle
+
 from perlin_noise import PerlinNoise
 # from npchandler import NPC
 from utils import Utils
@@ -20,19 +22,19 @@ class Cell:
 # FORMAT: class_name = Cell(x, y, symbol, color, name, passable)
 def create_cell(x, y, type):
     cell_dict = {
-        "grass_floor": Cell(x, y, "░", "green", "Grass Floor", True),
-        "sand_floor": Cell(x, y, "░", "yellow", "Sand Floor", True),
-        "dirt_floor": Cell(x, y, "░", "brown", "Dirt Floor", True),
-        "stone_floor": Cell(x, y, "░", "gray", "Stone Floor", True),
-        "water": Cell(x, y, "░", "blue", "Water", False),
-        "door": Cell(x, y, "░", "brown", "Door", True),
-        "chest": Cell(x, y, "░", "brown", "Chest", True),
-        "trap": Cell(x, y, "░", "brown", "Trap", True),
-        "tree_trunk": Cell(x, y, "▓", "brown", "Tree Trunk", False),
-        "wood_wall": Cell(x, y, "▓", "brown", "Wood Wall", False),
-        "stone_wall": Cell(x, y, "▓", "gray", "Stone Wall", False),
-        "empty": Cell(x, y, "░", "black", "Empty", False),
-        "dungeon_entrance": Cell(x, y, "░", "black", "Dungeon Entrance", True)
+        "grass_floor": Cell(x, y, "G", "green", "Grass Floor", True),
+        "sand_floor": Cell(x, y, "S", "yellow", "Sand Floor", True),
+        "dirt_floor": Cell(x, y, "D", "brown", "Dirt Floor", True),
+        "stone_floor": Cell(x, y, "F", "gray", "Stone Floor", True),
+        "water": Cell(x, y, "W", "blue", "Water", False),
+        "door": Cell(x, y, "O", "brown", "Door", True),
+        "chest": Cell(x, y, "C", "brown", "Chest", True),
+        "trap": Cell(x, y, "T", "brown", "Trap", True),
+        "tree_trunk": Cell(x, y, "T", "brown", "Tree Trunk", False),
+        "wood_wall": Cell(x, y, "W", "brown", "Wood Wall", False),
+        "stone_wall": Cell(x, y, "W", "gray", "Stone Wall", False),
+        "empty": Cell(x, y, "E", "black", "Empty", False),
+        "dungeon_entrance": Cell(x, y, "E", "black", "Dungeon Entrance", True)
     }
     return cell_dict[type]
 
@@ -130,13 +132,8 @@ def generate_dungeon(num_rooms, size):
     
     return dungeon
 
-
-
-# def print_map(map):
-#     # utils.clear()
-#     for row in map:
-#         for cell in row:
-#             print(utils.color_text(cell.symbol, cell.color), end=" ")
-#         print()
-
-# print_map(generate_world(400))
+def print_map(world):
+    for row in world:
+        for cell in row:
+            print(utils.color_text(cell.symbol, cell.color), end=" ")
+        print()
