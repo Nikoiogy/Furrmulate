@@ -15,8 +15,10 @@ class UIHandler:
 
     def update_history(self, history):
         self.history_win.clear()
-        for i, command in enumerate(history):
-            self.history_win.addstr(i, 0, command)
+        height, _ = self.history_win.getmaxyx()
+        for i, command in enumerate(reversed(history)):
+            if i < height:
+                self.history_win.addstr(height - 1 - i, 0, command)
         self.history_win.refresh()
 
     def update_output(self, output):
@@ -27,7 +29,8 @@ class UIHandler:
     def update_alert(self, alert):
         self.alert_win.clear()
         height, width = self.alert_win.getmaxyx()
-        self.alert_win.addstr(0, 0, alert[:width - 1])
+        curses.init_pair(3, curses.COLOR_RED, -1)  # Red text with default background color
+        self.alert_win.addstr(0, 0, alert[:width - 1], curses.color_pair(3))
         self.alert_win.refresh()
 
     def get_command(self):
