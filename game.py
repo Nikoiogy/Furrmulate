@@ -23,7 +23,7 @@ class Game:
             "test": self.handle_test,
             "exit": self.handle_exit,
             "save": self.handle_save,
-            "move": self.handle_move,
+            ("move", "go", "walk"): self.handle_move,
             # "look": self.player.look,
             # "inventory": self.player.print_inventory,
             # "pickup": self.player.pickup,
@@ -111,7 +111,15 @@ class Game:
 
             # Check if the command is not empty
             if command:
-                handler = self.command_handlers.get(command[0])
+                handler = None
+                for key in self.command_handlers:
+                    if isinstance(key, tuple) and command[0] in key:
+                        handler = self.command_handlers[key]
+                        break
+                    elif command[0] == key:
+                        handler = self.command_handlers[key]
+                        break
+
                 if handler:
                     alert = ""
                     try:
