@@ -43,7 +43,7 @@ class Menu:
             print("\nAccessibility Settings")
             print("3) Color Mode: " + (self.utils.color_text("On", "green") if self.utils.color_mode else "Off"))
             print("4) Text Speed: " + self.utils.text_speed)
-            print("\Development Settings")
+            print("\nDevelopment Settings")
             print("5) Debug Mode: " + (self.utils.color_text("On", "green") if self.utils.debug_mode else "Off"))
             print("\n9) Back")
             option = input(self.utils.color_text("Select an option ", "yellow") + self.alert + "# ")

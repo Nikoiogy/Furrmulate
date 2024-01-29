@@ -114,9 +114,9 @@ class Game:
             else:
                 alert = "Empty command!"
             
-            self.ui.update_alert(alert)  # Update the alert message
+            self.ui.update_alert(alert)
 
-        self.ui.cleanup()  # Clean up the UIHandler
+        self.ui.cleanup()
 
     def handle_test(self):
         output = "Test command"
