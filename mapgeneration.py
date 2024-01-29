@@ -44,7 +44,7 @@ def generate_world(size):
     # Add lakes using Perlin noise
     noise = PerlinNoise(octaves=6, seed=random.randint(0, 1000))
     total_cells = size * size
-    total_trees = 100
+    total_trees = total_cells // random.randint(10, 13) # Add trees to the world
     total_work = total_cells + total_trees  # Include trees in total work
     work_done = 0
 

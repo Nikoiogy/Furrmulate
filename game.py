@@ -36,6 +36,7 @@ class Game:
             # DEBUG COMMANDS
             "saveworld": self.save_world,
             "printworld": self.print_world,
+            "genworld": self.gen_world,
         }
 
     def loading_screen(self, message, input_function):
@@ -161,9 +162,20 @@ class Game:
 
     # DEBUG COMMANDS
 
+    def gen_world(self):
+        self.ui.cleanup()
+        self.world = self.loading_screen("Generating world...", lambda: generate_world(400))
+        self.spawn = random.choice([cell for row in self.world for cell in row if cell.passable])
+        self.player.set_position(self.spawn.x, self.spawn.y)
+        self.ui.debug_leavecurses_temporarily()
+        self.ui.map_handler(self.world, self.player.x, self.player.y)
+
+        return "World generated!"
+
     def save_world(self):
         with open("data/maps/debug-world.pkl", "wb") as file:
             pickle.dump(self.world, file)
+
         return "World saved!"
     
     def print_world(self):

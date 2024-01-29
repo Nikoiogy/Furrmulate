@@ -109,3 +109,10 @@ class UIHandler:
         curses.noecho()
         curses.cbreak()
         self.stdscr.keypad(True)
+
+    def debug_leavecurses_temporarily(self):
+        input("Press Enter to continue...")
+        self.stdscr = curses.initscr()
+        curses.noecho()
+        curses.cbreak()
+        self.stdscr.keypad(True)
