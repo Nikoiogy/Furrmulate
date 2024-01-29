@@ -61,6 +61,7 @@ class Game:
                 self.game_state = GameState(self.menu.main_menu())
 
             elif self.game_state == GameState.NEW:
+                self.player = Player(self.utils)
                 self.game_state = GameState(self.player.character_creation())
 
             elif self.game_state == GameState.LOAD:
