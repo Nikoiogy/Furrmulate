@@ -17,6 +17,12 @@ class UIHandler:
         self.alert_win = curses.newwin(1, width, height - 2, 0)
         self.input_win = curses.newwin(1, width, height - 1, 0)
 
+    def cleanup(self):
+        curses.nocbreak()
+        self.stdscr.keypad(False)
+        curses.echo()
+        curses.endwin()
+
     def update_history(self, history):
         self.history_win.clear()
         height, width = self.history_win.getmaxyx()
@@ -103,9 +109,3 @@ class UIHandler:
         curses.noecho()
         curses.cbreak()
         self.stdscr.keypad(True)
-
-    def cleanup(self):
-        curses.nocbreak()
-        self.stdscr.keypad(False)
-        curses.echo()
-        curses.endwin()
