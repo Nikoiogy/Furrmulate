@@ -197,7 +197,7 @@ class Player:
                             with open(file_path, "w") as file:
                                 json.dump(character, file)
 
-                            return "playing" ### START GAME
+                            return GameState.PLAYING ### START GAME
 
                     elif option == "9":
                         alert = ""
@@ -309,3 +309,33 @@ class Player:
     def set_position(self, x, y):
         self.x = x
         self.y = y
+
+    def move(self, direction, current_map):
+        # Define list of valid directions
+        north = ["north", "n", "up", "u"]
+        south = ["south", "s", "down", "d"]
+        west = ["west", "w", "left", "l"]
+        east = ["east", "e", "right", "r"]
+
+        # Get the cell in the specified direction
+        if direction in north:
+            cell = current_map[self.y - 1][self.x]
+            direction = "north"
+        elif direction in south:
+            cell = current_map[self.y + 1][self.x]
+            direction = "south"
+        elif direction in west:
+            cell = current_map[self.y][self.x - 1]
+            direction = "west"
+        elif direction in east:
+            cell = current_map[self.y][self.x + 1]
+            direction = "east"
+        
+
+        # Check if the cell is passable
+        if cell.passable:
+            self.x = cell.x
+            self.y = cell.y
+            return f"You move {direction}."
+        else:
+            return "You can't move there."

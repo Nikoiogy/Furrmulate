@@ -24,7 +24,7 @@ class Game:
             "exit": self.handle_exit,
             "save": self.handle_save,
             "map": self.handle_map,
-            # "move": self.player.move,
+            "move": self.handle_move,
             # "look": self.player.look,
             # "inventory": self.player.print_inventory,
             # "pickup": self.player.pickup,
@@ -99,17 +99,20 @@ class Game:
             self.history.append(" # " + command)
             output = ""
 
-            command = command.lower()
+            command = command.lower().split()
 
-            handler = self.command_handlers.get(command)
-            if handler:
-                alert = ""
-                try:
-                    output = handler()
-                except Exception as e:
-                    alert = f"Error: {e}"
+            if command:
+                handler = self.command_handlers.get(command[0])
+                if handler:
+                    alert = ""
+                    try:
+                        output = handler(*command[1:])  # Pass any additional words as arguments
+                    except Exception as e:
+                        alert = f"Error: {e}"
+                else:
+                    alert = "Invalid command!"
             else:
-                alert = "Invalid command!"
+                alert = "Empty command!"
             
             self.ui.update_alert(alert)  # Update the alert message
 
@@ -126,11 +129,14 @@ class Game:
     def handle_save(self):
         pass
 
-    def handle_map(self):
-        self.ui.map_handler(self.world)
+    # PLAYER COMMANDS
 
-    def handle_move(self):
-        pass
+    def handle_map(self):
+        self.ui.map_handler(self.world, self.player.x, self.player.y)
+        return None
+
+    def handle_move(self, direction):
+        return self.player.move(direction, self.world)
 
     def handle_look(self):
         pass
