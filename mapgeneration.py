@@ -44,7 +44,9 @@ def generate_world(size):
     # Add lakes using Perlin noise
     noise = PerlinNoise(octaves=6, seed=random.randint(0, 1000))
     total_cells = size * size
-    cells_generated = 0
+    total_trees = 100
+    total_work = total_cells + total_trees  # Include trees in total work
+    work_done = 0
 
     for y in range(size):
         for x in range(size):
@@ -55,9 +57,20 @@ def generate_world(size):
             if noise_value > 0.4 and noise_value < 0.42:
                 world[y][x] = create_cell(x, y, "sand_floor")
 
-            cells_generated += 1
-            progress = round(cells_generated / total_cells * 100)  # Calculate progress as a percentage
+            work_done += 1
+            progress = round(work_done / total_work * 100)  # Calculate progress as a percentage
             yield progress, world  # Yield progress and world
+
+    # Add trees
+    for i in range(total_trees):
+        x = random.randint(0, size - 1)
+        y = random.randint(0, size - 1)
+        if world[y][x].name == "Grass Floor":
+            world[y][x] = create_cell(x, y, "tree_trunk")
+
+        work_done += 1
+        progress = round(work_done / total_work * 100)  # Update progress after each tree
+        yield progress, world  # Yield progress and world
 
     return world
 

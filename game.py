@@ -33,7 +33,8 @@ class Game:
             # "stats": self.player.print_stats,
             # "help": self.player.print_help,
 
-            # Add more command handlers here
+            # DEBUG COMMANDS
+            "saveworld": self.save_world,
         }
 
     def loading_screen(self, message, input_function):
@@ -155,3 +156,10 @@ class Game:
 
     def handle_equip(self):
         pass
+
+    # DEBUG COMMANDS
+
+    def save_world(self):
+        with open("data/maps/debug-world.pkl", "wb") as file:
+            pickle.dump(self.world, file)
+        return "World saved!"
