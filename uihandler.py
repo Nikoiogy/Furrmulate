@@ -88,6 +88,22 @@ class UIHandler:
                 self.map_win.addstr(i, 0, line[:width - 1])
         self.map_win.refresh()  # Refresh map_win
 
+    # DEBUG COMMANDS
+    
+    def debug_map_handler(self, map, utils):
+        self.cleanup()
+
+        for row in map:
+            for cell in row:
+                print(utils.color_text(cell.symbol, cell.color), end=" ")
+            print()
+
+        input("Press Enter to continue...")
+        self.stdscr = curses.initscr()
+        curses.noecho()
+        curses.cbreak()
+        self.stdscr.keypad(True)
+
     def cleanup(self):
         curses.nocbreak()
         self.stdscr.keypad(False)

@@ -35,6 +35,7 @@ class Game:
 
             # DEBUG COMMANDS
             "saveworld": self.save_world,
+            "printworld": self.print_world,
         }
 
     def loading_screen(self, message, input_function):
@@ -164,3 +165,6 @@ class Game:
         with open("data/maps/debug-world.pkl", "wb") as file:
             pickle.dump(self.world, file)
         return "World saved!"
+    
+    def print_world(self):
+        self.ui.debug_map_handler(self.world, self.utils)
