@@ -23,7 +23,6 @@ class Game:
             "test": self.handle_test,
             "exit": self.handle_exit,
             "save": self.handle_save,
-            "map": self.handle_map,
             "move": self.handle_move,
             # "look": self.player.look,
             # "inventory": self.player.print_inventory,
@@ -89,18 +88,24 @@ class Game:
         self.utils.clear()
         alert = ""
         output = ""
+        self.ui.map_handler(self.world, self.player.x, self.player.y)
 
         while self.game_state == GameState.PLAYING:
             self.utils.clear()
             
+            # Update the UI
             self.ui.update_history(self.history)
             self.ui.update_output(output)
+
+            # Get the player's command
             command = self.ui.get_command()
             self.history.append(" # " + command)
             output = ""
 
+            # Split the command into words for argument parsing
             command = command.lower().split()
 
+            # Check if the command is not empty
             if command:
                 handler = self.command_handlers.get(command[0])
                 if handler:
@@ -118,6 +123,7 @@ class Game:
 
         self.ui.cleanup()
 
+    ## COMMAND HANDLERS ##
     def handle_test(self):
         output = "Test command"
         return output
@@ -130,13 +136,10 @@ class Game:
         pass
 
     # PLAYER COMMANDS
-
-    def handle_map(self):
-        self.ui.map_handler(self.world, self.player.x, self.player.y)
-        return None
-
     def handle_move(self, direction):
-        return self.player.move(direction, self.world)
+        output = self.player.move(direction, self.world)
+        self.ui.map_handler(self.world, self.player.x, self.player.y) 
+        return output
 
     def handle_look(self):
         pass

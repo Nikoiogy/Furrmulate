@@ -62,11 +62,11 @@ class UIHandler:
 
     def map_handler(self, map, player_x, player_y):
         height, width = self.map_win.getmaxyx()  # Use map_win dimensions
-        map_height = len(map)
         map_width = len(map[0])
-        start_x = max(0, min(map_width - width, player_x - width // 2))
+        map_height = len(map)
+        start_x = max(0, min(map_width - width // 4, player_x - width // 4))  # Adjust for spaces
         start_y = max(0, min(map_height - height, player_y - height // 2))
-        end_x = min(map_width, start_x + width)
+        end_x = min(map_width, start_x + width // 2)  # Adjust for spaces
         end_y = min(map_height, start_y + height)
         map_string = ""
         for y in range(start_y, end_y):
@@ -76,10 +76,10 @@ class UIHandler:
                     symbol = "_"
                 else:
                     symbol = cell.symbol
-                if y - start_y < height - 1 and x - start_x < width - 1:
+                if y - start_y < height - 1 and x - start_x < width // 2:  # Adjust for spaces
                     if x == player_x and y == player_y:
                         symbol = "@"
-                    map_string += symbol
+                    map_string += symbol + " "  # Add a space after each cell
             map_string += "\n"
         self.map_win.clear()  # Clear map_win
         lines = map_string.split('\n')
