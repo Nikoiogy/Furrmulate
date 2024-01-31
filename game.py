@@ -16,8 +16,6 @@ class Game:
         self.menu = Menu(self.utils)
         self.game_state = GameState.MAIN_MENU
         self.history = deque(maxlen=25)
-        self.ui = UIHandler()
-        self.ui.cleanup()
 
         self.command_handlers = {
             "test": self.handle_test,
@@ -70,6 +68,7 @@ class Game:
                 self.game_state = GameState(self.player.initialize_player())
 
             elif self.game_state == GameState.PLAYING:
+                self.ui = UIHandler()
                 if self.utils.debug_mode:
                     debug_world_filepath = "data/maps/debug-world.pkl"
 
